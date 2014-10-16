@@ -1,0 +1,22 @@
+<launch>
+  <arg name="fixed_frame" value="camera_depth_frame" />
+
+  <arg name="debug" value="False" />
+  <arg name="launch_prefix" value="xterm -e gdb --args" />
+  
+    
+  <include file="$(find openni_launch)/launch/kinect_frames.launch" />
+
+  <group if="$(arg debug)">
+    <node launch-prefix="$(arg launch_prefix)" name="skeleton_tracker" pkg="pi_tracker" type="skeleton_tracker" output="screen"	>
+      <param name="fixed_frame" value="$(arg fixed_frame)" />
+      <param name="load_filepath" value="$(find pi_tracker)/params/SamplesConfigNewOpenNI.xml" />
+    </node>
+  </group>
+  <group unless="$(arg debug)">
+    <node name="skeleton_tracker" pkg="pi_tracker" type="skeleton_tracker">
+      <param name="fixed_frame" value="$(arg fixed_frame)" />
+      <param name="load_filepath" value="$(find pi_tracker)/params/SamplesConfigNewOpenNI.xml" />
+    </node>
+  </group>
+</launch>
